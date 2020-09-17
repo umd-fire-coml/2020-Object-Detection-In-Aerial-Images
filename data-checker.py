@@ -4,13 +4,16 @@ import os
 from PIL import Image
 
 badFiles = []
-for file in os.listdir("/data"):
+for file in os.listdir("./data"):
     if not file.endswith(".png"):
         badFiles.append(file)
     else:
-        img = Image.open
         try:
-            img = Image.open("/data/" + file)
+            img = Image.open("./data/" + file)
             img.verify()
         except:
             badFiles.append(file + "CORRUPT")
+if len(badFiles) == 0:
+    print("All good!")
+else:
+    print("Bad things: " + badFiles)
