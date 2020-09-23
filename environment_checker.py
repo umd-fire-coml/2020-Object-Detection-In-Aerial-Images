@@ -38,14 +38,5 @@ for package in dependencies:
         print("Your Environment has ", package[0], "=", package[1], ": ", dependencies[package]) 
     else:
         print("Your Environment has ", package[0], ": ", dependencies[package])
-    
-            
-
-
-
-
-
-
-    
 
 # %%
