@@ -1,7 +1,6 @@
 #!/bin/sh
-ln -sf ./.githooks hooks
 rm -r .git/hooks
-mv -f hooks .git/
+ln -sf ../.githooks .git/hooks
 conda install -n base black
-conda config --set auto_stack
+conda config --set auto_stack 1
 conda env create --force --file environment.yml
