@@ -1,0 +1,8 @@
+
+name: 2020-Object-Detection-In-Aerial-Images
+dependencies:
+    - tensorflow=2.1.*
+    - pandas
+    - opencv
+    - matplotlib
+    - jupyterlab
