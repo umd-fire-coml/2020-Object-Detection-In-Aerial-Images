@@ -1,7 +1,6 @@
 #!/bin/sh
 pyfiles=$(git diff --cached --name-only --diff-filter=ACM | grep '.py$')
 for pf in $pyfiles; do
-
     if !($(black --check $pf)); then
         echo $pf
         black $pf

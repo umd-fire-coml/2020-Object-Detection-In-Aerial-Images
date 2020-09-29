@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+if [[ $(uname -s) == MINGW64* ]]; then
+    export MSYS=winsymlinks:nativestrict
+fi
 rm -r .git/hooks
 ln -sf ../.githooks .git/hooks
 conda install -n base black
