@@ -1,0 +1,12 @@
+
+name: 2020-Object-Detection-In-Aerial-Images
+channels:
+    - conda-forge
+    - defaults
+dependencies:
+    - tensorflow=2.1.*
+    - pandas
+    - opencv
+    - matplotlib
+    - jupyterlab
+    - gdown
