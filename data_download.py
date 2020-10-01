@@ -19,11 +19,11 @@ if not(os.path.exists('data/test')):
 if not(os.path.exists('data/validation')):
     os.makedirs('data/validation')
 
-if not(os.path.exists('data/validation/annotations_hbb')):
-    os.makedirs('data/validation/annotations_hbb')
+if not(os.path.exists('data/validation/annotations_hbb/')):
+    os.makedirs('data/validation/annotations_hbb/')
 
-if not(os.path.exists('data/validation/annotations')):
-    os.makedirs('data/validation/annotations')
+if not(os.path.exists('data/validation/annotations/')):
+    os.makedirs('data/validation/annotations/')
 
 
 # %% training set
