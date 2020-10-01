@@ -1,6 +1,7 @@
 # %%
 import gdown
 import os
+from zipfile import ZipFile
 
 # %% setting up data directories
 if not(os.path.exists('data/train')):
@@ -54,3 +55,17 @@ outputs = ['data/test/part1.zip', 'data/test/part2.zip', 'data/test/test_info.js
 
 for i in range(len(urls)):
     gdown.download(urls[i],outputs[i], quiet = False)
+
+# %% Unzipping
+
+zip_paths = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip',
+'data/train/annotations/annotations.zip', 'data/valdation/validation.zip', 
+'data/validation/annotations/annotations.zip', 'data/test/part1.zip', 'data/test/part2.zip']
+
+outputs = ['data/train/', 'data/train/', 'data/train/', 'data/train/annotations/',
+'data/validation/', 'data/validation/annotations/', 'data/test/', 'data/test/']
+
+for i in range(len(zip_paths)):
+    with ZipFile(zip_paths[i], 'r') as zip_ref:
+        zip_ref.extractall(outputs[i])
+        
