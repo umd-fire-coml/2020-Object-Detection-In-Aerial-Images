@@ -57,17 +57,6 @@ for i in range(len(urls)):
 
 
 
-# %% test
-urls = ['https://drive.google.com/uc?export=download&id=1fwiTNqRRen09E-O9VSpcMV2e6_d4GGVK',
-'https://drive.google.com/uc?export=download&id=1wTwmxvPVujh1I6mCMreoKURxCUI8f-qv',
-'https://drive.google.com/uc?export=download&id=1nQokIxSy3DEHImJribSCODTRkWlPJLE3']
-
-outputs = ['data/test/part1.zip', 'data/test/part2.zip', 'data/test/test_info.json']
-
-for i in range(len(urls)):
-    if not(os.path.exists(outputs[i])):
-        gdown.download(urls[i],outputs[i], quiet = False)
-
 # %% Unzipping
 
 zip_paths = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip',
