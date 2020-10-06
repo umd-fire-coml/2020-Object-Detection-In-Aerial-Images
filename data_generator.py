@@ -18,7 +18,9 @@ labels_to_idx = {
     "small-vehicle": 10,
     "helicopter": 11,
     "roundabout": 12,
-    "soccer-ball-field-and-swimming-pool": 13,
+    "soccer-ball-field": 13,
+    "swimming-pool": 14,
+    "container-crane": 15,
 }
 
 
@@ -40,8 +42,24 @@ class DOTASequence(Sequence):
             images_missing_annotation = set(self.images) - annotations
             if len(images_missing_annotation) != 0:
                 raise InconsistentDatasetError(
-                    "Images missing annotations: " + " ".join(images_missing_annotation)
+                    "Images missing annotations: "
+                    + ", ".join(images_missing_annotation)
                 )
+
+        # Load all annotations into memory
+        self.annotations = {}
+        for img_name in self.images:
+            file_path = os.path.join(self.annot_path, img_name + ".txt")
+            # Test for no annotations
+            with open(file_path) as f:
+                for i, l in enumerate(f):
+                    if i >= 2:
+                        self.annotations[img_name] = np.loadtxt(
+                            file_path,
+                            skiprows=2,
+                            converters={8: lambda s: labels_to_idx[s.decode("utf-8")]},
+                        )
+                        break
 
     def __len__(self):
         return len(self.images) / self.batch_size
@@ -50,16 +68,12 @@ class DOTASequence(Sequence):
         batch_images = self.images[idx * self.batch_size : (idx + 1) * self.batch_size]
         batch_x = []
         batch_y = []
-        for img in batch_images:
+        for img_name in batch_images:
             batch_x.append(
-                self.augmenter(cv2.imread(os.path.join(self.img_path, img + ".png")))
-            )
-            batch_y.append(
-                np.loadtxt(
-                    os.path.join(self.annot_path, img + ".txt"),
-                    skiprows=2,
-                    converters={8: lambda s: labels_to_idx[s.decode("utf-8")]},
+                self.augmenter(
+                    cv2.imread(os.path.join(self.img_path, img_name + ".png"))
                 )
             )
+            batch_y.append(self.annotations[img_name])
 
         return np.asarray(batch_x), np.asarray(batch_y)
