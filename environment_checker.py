@@ -1,5 +1,7 @@
 # Environment Checker Script:
-# run 'conda env export | python3 environment_checker.py
+
+# run 'conda env export | python3 environment_checker.py'
+
 # Checker will tell you if you are missing a package or have the wrong version
 # %%
 import sys
@@ -38,14 +40,3 @@ for package in dependencies:
         print("Your Environment has ", package[0], "=", package[1], ": ", dependencies[package]) 
     else:
         print("Your Environment has ", package[0], ": ", dependencies[package])
-    
-            
-
-
-
-
-
-
-    
-
-# %%
