@@ -38,7 +38,8 @@ outputs = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip
 'data/train/annotations_hbb/annotations.zip', 'data/train/annotations/annotations.zip']
 
 for i in range(len(urls)):
-    gdown.download(urls[i],outputs[i], quiet = False)
+    if not(os.path.exists(outputs[i])):
+        gdown.download(urls[i],outputs[i], quiet = False)
 
 
 
@@ -51,7 +52,8 @@ outputs = ['data/validation/validation.zip', 'data/validation/annotations_hbb/an
 'data/validation/annotations/annotations.zip']
 
 for i in range(len(urls)):
-    gdown.download(urls[i],outputs[i], quiet = False)
+    if not(os.path.exists(outputs[i])):
+        gdown.download(urls[i],outputs[i], quiet = False)
 
 
 
@@ -63,7 +65,8 @@ urls = ['https://drive.google.com/uc?export=download&id=1fwiTNqRRen09E-O9VSpcMV2
 outputs = ['data/test/part1.zip', 'data/test/part2.zip', 'data/test/test_info.json']
 
 for i in range(len(urls)):
-    gdown.download(urls[i],outputs[i], quiet = False)
+    if not(os.path.exists(outputs[i])):
+        gdown.download(urls[i],outputs[i], quiet = False)
 
 # %% Unzipping
 
