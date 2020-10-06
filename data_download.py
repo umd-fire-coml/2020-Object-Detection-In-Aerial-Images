@@ -81,6 +81,6 @@ for i in range(len(zip_paths)):
         with ZipFile(zip_paths[i], 'r') as zip_ref:
             zip_ref.extractall(outputs[i])
     else:
-        print("Missing file: ", zip_paths[i])
+        print("Missing file: ", zip_paths[i], "\nDownload manually if google drive access was denied")
 
 # %%
