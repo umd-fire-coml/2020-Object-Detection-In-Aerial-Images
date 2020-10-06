@@ -38,7 +38,8 @@ outputs = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip
 'data/train/annotations_hbb/annotations.zip', 'data/train/annotations/annotations.zip']
 
 for i in range(len(urls)):
-    gdown.download(urls[i],outputs[i], quiet = False)
+    if not(os.path.exists(outputs[i])):
+        gdown.download(urls[i],outputs[i], quiet = False)
 
 
 
@@ -47,11 +48,12 @@ urls = ['https://drive.google.com/uc?export=download&id=1uCCCFhFQOJLfjBpcL5MC0DH
 'https://drive.google.com/uc?export=download&id=1XDWNx3FkH9layL8jVUkEHJ_-CY8K4zse',
 'https://drive.google.com/uc?export=download&id=1FkCSOCy4ieNg1UZj1-Irfw6-Jgqa37cC']
 
-outputs = ['data/validation/validation.zip', 'data/validation/annotations_hbb/annotations.zip',
+outputs = ['data/validation/part1.zip', 'data/validation/annotations_hbb/annotations.zip',
 'data/validation/annotations/annotations.zip']
 
 for i in range(len(urls)):
-    gdown.download(urls[i],outputs[i], quiet = False)
+    if not(os.path.exists(outputs[i])):
+        gdown.download(urls[i],outputs[i], quiet = False)
 
 
 
@@ -63,12 +65,13 @@ urls = ['https://drive.google.com/uc?export=download&id=1fwiTNqRRen09E-O9VSpcMV2
 outputs = ['data/test/part1.zip', 'data/test/part2.zip', 'data/test/test_info.json']
 
 for i in range(len(urls)):
-    gdown.download(urls[i],outputs[i], quiet = False)
+    if not(os.path.exists(outputs[i])):
+        gdown.download(urls[i],outputs[i], quiet = False)
 
 # %% Unzipping
 
 zip_paths = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip',
-'data/train/annotations_hbb/annotations.zip', 'data/valdation/validation.zip', 
+'data/train/annotations_hbb/annotations.zip', 'data/validation/part1.zip', 
 'data/validation/annotations_hbb/annotations.zip', 'data/test/part1.zip', 'data/test/part2.zip',
 'data/train/annotations/annotations.zip','data/validation/annotations/annotations.zip']
 
@@ -77,5 +80,10 @@ outputs = ['data/train/', 'data/train/', 'data/train/', 'data/train/annotations_
 'data/validation/annotations/']
 
 for i in range(len(zip_paths)):
-    with ZipFile(zip_paths[i], 'r') as zip_ref:
-        zip_ref.extractall(outputs[i])
+    if os.path.exists(zip_paths[i]):
+        with ZipFile(zip_paths[i], 'r') as zip_ref:
+            zip_ref.extractall(outputs[i])
+    else:
+        print("Missing file: ", zip_paths[i], "\nDownload manually if google drive access was denied")
+
+# %%
