@@ -8,6 +8,14 @@ import re
 #getting dependencies from environment.yml
 env_yml = open('environment.yml', 'r')
 dependencies = {}
+
+#skipping to dependencies
+for line in env_yml:
+    line.strip
+    if line == "dependencies:\n":
+        break
+# %%
+
 for line in env_yml:
     #capturing packages and their versions
     match = re.match("^\s+-\s+([a-zA-Z]+)(?:=([0-9]+(?:\.[0-9]+)*)(?:\.\*)?)?\s*$", line)
