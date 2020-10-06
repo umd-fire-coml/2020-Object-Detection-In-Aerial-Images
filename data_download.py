@@ -77,5 +77,10 @@ outputs = ['data/train/', 'data/train/', 'data/train/', 'data/train/annotations_
 'data/validation/annotations/']
 
 for i in range(len(zip_paths)):
-    with ZipFile(zip_paths[i], 'r') as zip_ref:
-        zip_ref.extractall(outputs[i])
+    if os.path.exists(zip_paths[i]):
+        with ZipFile(zip_paths[i], 'r') as zip_ref:
+            zip_ref.extractall(outputs[i])
+    else:
+        print("Missing file: ", zip_paths[i])
+
+# %%
