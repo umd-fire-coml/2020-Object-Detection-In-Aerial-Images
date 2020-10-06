@@ -48,7 +48,7 @@ urls = ['https://drive.google.com/uc?export=download&id=1uCCCFhFQOJLfjBpcL5MC0DH
 'https://drive.google.com/uc?export=download&id=1XDWNx3FkH9layL8jVUkEHJ_-CY8K4zse',
 'https://drive.google.com/uc?export=download&id=1FkCSOCy4ieNg1UZj1-Irfw6-Jgqa37cC']
 
-outputs = ['data/validation/validation.zip', 'data/validation/annotations_hbb/annotations.zip',
+outputs = ['data/validation/part1.zip', 'data/validation/annotations_hbb/annotations.zip',
 'data/validation/annotations/annotations.zip']
 
 for i in range(len(urls)):
@@ -71,7 +71,7 @@ for i in range(len(urls)):
 # %% Unzipping
 
 zip_paths = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip',
-'data/train/annotations_hbb/annotations.zip', 'data/validation/validation.zip', 
+'data/train/annotations_hbb/annotations.zip', 'data/validation/part1.zip', 
 'data/validation/annotations_hbb/annotations.zip', 'data/test/part1.zip', 'data/test/part2.zip',
 'data/train/annotations/annotations.zip','data/validation/annotations/annotations.zip']
 
