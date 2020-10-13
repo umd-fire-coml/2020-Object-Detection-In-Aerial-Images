@@ -18,15 +18,15 @@ for path in paths:
             bad_files.append(file)
         elif file_end == '.png':
             try:
-                img = Image.open("./data/" + file)
+                img = Image.open(os.path.join(path, file))
                 img.verify()
             except:
-                bad_files.append(file + "CORRUPT")
+                bad_files.append(file + " CORRUPT")
         elif file.endswith == '.zip':
-            os.remove(file)
+            os.remove(os.path.join(path, file)) # Might not work pls fix
 if len(bad_files) == 0:
     print("All good!")
 else:
     print("Bad things: ")
     for p in bad_files:
-        print(p + ",")
+        print(p)
