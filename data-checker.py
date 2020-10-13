@@ -4,7 +4,7 @@ import os
 from PIL import Image
 
 bad_files = []
-paths = ['data/train', 'data/test', 'data/validation', 
+paths = ['data/train/images', 'data/test/images', 'data/validation/images', 
         'data/train/annotations_hbb', 'data/train/annotations', 
         'data/validation/annotations_hbb', 'data/validation/annotations']
 file_end = '.png'
@@ -22,6 +22,8 @@ for path in paths:
                 img.verify()
             except:
                 bad_files.append(file + "CORRUPT")
+        elif file.endswith == '.zip':
+            os.remove(file)
 if len(bad_files) == 0:
     print("All good!")
 else:
