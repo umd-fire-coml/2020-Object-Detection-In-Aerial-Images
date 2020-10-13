@@ -1,15 +1,16 @@
 import cv2
 import numpy as np
 import albumentations as A
+import copy
 import random
 
-def augment (image, annots):
+def augment (image, original_annots):
     # N.B. while the albumentations library is convenient, it lacks any way to
     # represent non-horizontal bounding boxes, so those have to be dealt with manually
-    print(annots.shape)
     transforms = []
     height, width = image.shape[:2]
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    annots = copy.deepcopy(original_annots)
     
     if (random.randint(0,2) == 0):
         #Flip horizontally with 1/3 probability
@@ -22,7 +23,7 @@ def augment (image, annots):
     
     if (random.randint(0,2) == 0):
         #Flip vertically with 1/3 probability
-        cv2.flip(image,0)
+        image = cv2.flip(image,0)
         for box in annots:
             box[1] = height - box[1]
             box[3] = height - box[3]
