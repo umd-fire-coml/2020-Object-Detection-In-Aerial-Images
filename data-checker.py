@@ -24,7 +24,7 @@ for path_bad in paths:
             except:
                 bad_files.append(file + " CORRUPT")
         elif file.endswith == '.zip':
-            os.remove(os.path.join(path, file)) # Might not work pls fix
+            os.remove(os.path.join(path, file))
 if len(bad_files) == 0:
     print("All good!")
 else:
