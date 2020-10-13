@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import albumentations as A
-import copy
 import random
 
 def augment (image, annots):
