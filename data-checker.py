@@ -12,7 +12,7 @@ file_end = '.png'
 # Goes through expected file structure, checking if file ends are correct, and pngs for corruption
 for path_bad in paths:
     path = os.path.normpath(path_bad)
-    if path == 'data/train/annotations_hbb':
+    if path == os.path.normpath('data/train/annotations_hbb'):
         file_end = '.txt'
     for file in os.listdir(path):
         if not file.endswith(file_end):
