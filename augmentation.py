@@ -6,7 +6,7 @@ import random
 def augment (image, annots):
     # N.B. while the albumentations library is convenient, it lacks any way to
     # represent non-horizontal bounding boxes, so those have to be dealt with manually
-    
+    print(annots.shape)
     transforms = []
     height, width = image.shape[:2]
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -89,6 +89,8 @@ def augment (image, annots):
             height = width
             width = temp
     
+    # Cropping will be handled elsewhere; saving this just in case
+    '''
     if (random.randint(0,1) == 0):
         #Crop randomly with 1/2 probability
         xmin = random.randint(0,int(width/4))
@@ -127,6 +129,7 @@ def augment (image, annots):
         transforms.append(A.Crop(x_min = xmin, y_min = ymin, x_max = xmax, y_max = ymax, p=1.0))
         height = ymax - ymin
         width = xmax - xmin
+    '''
     
     transforms.append(A.RandomBrightnessContrast(p=0.5))
     # Randomly shift brightness and contrast with 50% probability

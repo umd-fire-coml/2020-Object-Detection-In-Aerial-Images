@@ -29,7 +29,7 @@ class InconsistentDatasetError(Exception):
 
 
 class DOTASequence(Sequence):
-    def __init__(self, img_path, annot_path, augmenter=lambda x: x, batch_size=5):
+    def __init__(self, img_path, annot_path, augmenter = None, batch_size=5):
         self.augmenter = augmenter
         self.img_path = img_path
         self.annot_path = annot_path
@@ -69,11 +69,14 @@ class DOTASequence(Sequence):
         batch_x = []
         batch_y = []
         for img_name in batch_images:
-            batch_x.append(
-                self.augmenter(
-                    cv2.imread(os.path.join(self.img_path, img_name + ".png"))
+            if (self.augmenter) == None:
+                batch_x.append(cv2.imread(os.path.join(self.img_path, img_name + ".png")))
+                batch_y.append(self.annotations[img_name])
+            else:
+                x, y = self.augmenter(
+                    cv2.imread(os.path.join(self.img_path, img_name + ".png")),
+                    self.annotations[img_name]
                 )
-            )
-            batch_y.append(self.annotations[img_name])
-
+                batch_x.append(x)
+                batch_y.append(y)
         return np.asarray(batch_x), np.asarray(batch_y)
