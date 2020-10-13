@@ -1,5 +1,7 @@
 # Environment Checker Script:
+
 # run 'conda env export | python3 environment_checker.py'
+
 # Checker will tell you if you are missing a package or have the wrong version
 # %%
 import sys
@@ -8,6 +10,14 @@ import re
 #getting dependencies from environment.yml
 env_yml = open('environment.yml', 'r')
 dependencies = {}
+
+#skipping to dependencies
+for line in env_yml:
+    line.strip
+    if line == "dependencies:\n":
+        break
+# %%
+
 for line in env_yml:
     #capturing packages and their versions
     match = re.match("^\s+-\s+([a-zA-Z]+)(?:=([0-9]+(?:\.[0-9]+)*)(?:\.\*)?)?\s*$", line)

@@ -1,19 +1,30 @@
-#Iterates through all files in data, checking if they're pngs or corrupted
+#Iterates through all files in data
 
 import os
 from PIL import Image
 
-badFiles = []
-for file in os.listdir("./data"):
-    if not file.endswith(".png"):
-        badFiles.append(file)
-    else:
-        try:
-            img = Image.open("./data/" + file)
-            img.verify()
-        except:
-            badFiles.append(file + "CORRUPT")
-if len(badFiles) == 0:
+bad_files = []
+paths = ['data/train', 'data/test', 'data/validation', 
+        'data/train/annotations_hbb', 'data/train/annotations', 
+        'data/validation/annotations_hbb', 'data/validation/annotations']
+file_end = '.png'
+
+# Goes through expected file structure, checking if file ends are correct, and pngs for corruption
+for path in paths:
+    if path == 'data/train/annotations_hbb':
+        file_end = '.txt'
+    for file in os.listdir(path):
+        if not file.endswith(file_end):
+            bad_files.append(file)
+        elif file_end == '.png':
+            try:
+                img = Image.open("./data/" + file)
+                img.verify()
+            except:
+                bad_files.append(file + "CORRUPT")
+if len(bad_files) == 0:
     print("All good!")
 else:
-    print("Bad things: " + badFiles)
+    print("Bad things: ")
+    for p in bad_files:
+        print(p + ",")
