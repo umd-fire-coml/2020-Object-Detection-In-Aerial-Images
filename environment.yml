@@ -8,3 +8,5 @@ dependencies:
     - matplotlib
     - jupyterlab
     - scikit-image
+    - pip:
+        - albumentations
