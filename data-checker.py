@@ -10,7 +10,8 @@ paths = ['data/train/images', 'data/test/images', 'data/validation/images',
 file_end = '.png'
 
 # Goes through expected file structure, checking if file ends are correct, and pngs for corruption
-for path in paths:
+for path_bad in paths:
+    path = os.path.normpath(path_bad)
     if path == 'data/train/annotations_hbb':
         file_end = '.txt'
     for file in os.listdir(path):
@@ -18,15 +19,15 @@ for path in paths:
             bad_files.append(file)
         elif file_end == '.png':
             try:
-                img = Image.open("./data/" + file)
+                img = Image.open(os.path.join(path, file))
                 img.verify()
             except:
-                bad_files.append(file + "CORRUPT")
+                bad_files.append(file + " CORRUPT")
         elif file.endswith == '.zip':
-            os.remove(file)
+            os.remove(os.path.join(path, file))
 if len(bad_files) == 0:
     print("All good!")
 else:
     print("Bad things: ")
     for p in bad_files:
-        print(p + ",")
+        print(p)
