@@ -71,11 +71,11 @@ class DOTASequence(Sequence):
         for img_name in batch_images:
             if (self.augmenter) == None:
                 batch_x.append(cv2.imread(os.path.join(self.img_path, img_name + ".png")))
-                batch_y.append(self.annotations[img_name])
+                batch_y.append(np.array(self.annotations[img_name]))
             else:
                 x, y = self.augmenter(
                     cv2.imread(os.path.join(self.img_path, img_name + ".png")),
-                    self.annotations[img_name]
+                    np.array(self.annotations[img_name])
                 )
                 batch_x.append(x)
                 batch_y.append(y)
