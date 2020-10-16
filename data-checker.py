@@ -22,8 +22,8 @@ for path_bad in paths:
                 print("Removed: " + file)
         elif file_end == '.png':
             try:
-                img = Image.open(os.path.join(path, file))
-                img.verify()
+                with Image.open(os.path.join(path, file)) as img:
+                    img.verify()
             except:
                 bad_files.append(file + " CORRUPT")
 if len(bad_files) == 0:
