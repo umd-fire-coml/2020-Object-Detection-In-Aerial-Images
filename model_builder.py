@@ -5,7 +5,8 @@ from tensorflow.keras.regularizers import l2
 
 #%% Global Tensorflow settings
 devices = tf.config.experimental.list_physical_devices("GPU")
-tf.config.experimental.set_memory_growth(devices[0], True)
+if devices:
+    tf.config.experimental.set_memory_growth(devices[0], True)
 tf.keras.mixed_precision.experimental.set_policy(
     tf.keras.mixed_precision.experimental.Policy("mixed_float16")
 )
