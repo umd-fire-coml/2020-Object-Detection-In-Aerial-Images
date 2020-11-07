@@ -16,3 +16,4 @@ dependencies:
     - imgaug
     - albumentations
     - gdown
+    - keras
