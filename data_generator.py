@@ -1,5 +1,6 @@
 # %%
 import os
+import sys
 
 import cv2
 import matplotlib
@@ -67,6 +68,9 @@ class DOTASequence(Sequence):
                         self.annotations[img_name][:, :8] -= 1
                         break
 
+            if img_name not in self.annotations.keys():
+                self.annotations[img_name] = []
+
     def __len__(self):
         return len(self.image_names) // self.batch_size
 
@@ -93,7 +97,7 @@ class DOTASequence(Sequence):
         return np.asarray(batch_x), np.asarray(batch_y)
 
 
-class SegmentationSequence(DOTASequence):
+class SegmentationSequence(Sequence):
     def __init__(
         self,
         img_path,
@@ -102,10 +106,15 @@ class SegmentationSequence(DOTASequence):
         batch_size=5,
         output_img_size=(480, 480),
         steps_per_epoch=1000,
+        dtypes=(np.uint8, np.uint8),
     ):
-        super().__init__(img_path, annot_path, augmenter, batch_size)
+        self.image_path = img_path
+        self.annot_path = annot_path
+        self.augmenter = augmenter
+        self.batch_size = batch_size
         self.output_img_size = output_img_size
         self.steps_per_epoch = steps_per_epoch
+        self.dtypes = dtypes
 
         self.generator = self.batch_generator()
 
@@ -122,16 +131,13 @@ class SegmentationSequence(DOTASequence):
                 if self.augmenter:
                     img, bbox_set = self.augmenter(img, bbox_set)
 
+                img = img.astype(self.dtypes[0])
                 mask = np.zeros(
-                    (img.shape[0], img.shape[1], len(labels_to_idx)), dtype=np.uint8
+                    (img.shape[0], img.shape[1], len(labels_to_idx)),
+                    dtype=self.dtypes[1],
                 )
                 for bbox in bbox_set:
-                    try:
-                        box_class = bbox[8]
-                    except IndexError as e:
-                        print(img_name)
-                        print(bbox)
-                        raise e
+                    box_class = bbox[8]
 
                     bbox = bbox[:8].reshape((4, 2))
 
@@ -173,7 +179,8 @@ class SegmentationSequence(DOTASequence):
         for i, img in enumerate(imgs):
             if img.shape != (self.output_img_size[1], self.output_img_size[0], 3):
                 img_pad = np.zeros(
-                    (self.output_img_size[1], self.output_img_size[0], 3)
+                    (self.output_img_size[1], self.output_img_size[0], 3),
+                    dtype=np.uint8,
                 )
                 img_pad[: img.shape[0], : img.shape[1]] = img
                 imgs[i] = img_pad
@@ -201,4 +208,14 @@ if __name__ == "__main__":
     sequence = SegmentationSequence(
         ".\\data\\train\\images", ".\\data\\train\\annotations"
     )
+    i = 0
+    while True:
+        imgs, masks = sequence[0]
+        if imgs.shape != (5, 480, 480, 3):
+            print("Sample {} img incorrect load. Shape {}".format(i, imgs.shape))
+            sys.exit()
+        if masks.shape != (5, 480, 480, 16):
+            print("Sample {} mask incorrect load. Shape {}".format(i, masks.shape))
+            sys.exit()
+
 # %%

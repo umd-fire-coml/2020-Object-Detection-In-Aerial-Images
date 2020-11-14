@@ -5,8 +5,6 @@ from tensorflow.keras.regularizers import l2
 
 #%% Global Tensorflow settings
 devices = tf.config.experimental.list_physical_devices("GPU")
-if devices:
-    tf.config.experimental.set_memory_growth(devices[0], True)
 tf.keras.mixed_precision.experimental.set_policy(
     tf.keras.mixed_precision.experimental.Policy("mixed_float16")
 )
@@ -16,7 +14,7 @@ def resnet_layer(
     num_filters,
     kernel_size=3,
     strides=1,
-    activation=kl.LeakyReLU(dtype=tf.float16),
+    activation=kl.ReLU(dtype=tf.float16),
     batchnorm=True,
 ):
     def resnet_layer_gen(inputs):
@@ -26,7 +24,7 @@ def resnet_layer(
             strides=strides,
             padding="same",
             kernel_initializer="he_normal",
-            kernel_regularizer=l2(1e-3),
+            kernel_regularizer=None,
             bias_initializer="he_normal",
             bias_regularizer=None,
             activation=None,
@@ -59,7 +57,7 @@ def build_segmentation_model(
     input_shape, blocks_depth, num_layers, initial_filters, num_classes
 ):
     inputs = kl.Input(shape=input_shape)
-    x = resnet_layer(6, kernel_size=3)(inputs)
+    x = resnet_layer(initial_filters, kernel_size=5)(inputs)
     num_filters = initial_filters
     residuals = []
 
