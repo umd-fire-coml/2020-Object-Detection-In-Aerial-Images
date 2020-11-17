@@ -51,23 +51,6 @@ def tversky_loss(y_true, y_pred):
     return Ncl - T
 
 
-# https://arxiv.org/abs/2006.14822
-def focal_loss(alpha, gamma):
-    def focal_loss_func(y_true, y_pred):
-        y_pred = tf.clip_by_value(y_pred, K.epsilon(), 1 - K.epsilon())
-        logits = tf.math.log(y_pred / (1 - y_pred))
-
-        weight_a = alpha * (1 - y_pred) ** gamma * y_true
-        weight_b = (1 - alpha) * y_pred ** gamma * (1 - y_true)
-
-        loss = (tf.math.log1p(tf.exp(-tf.abs(logits))) + tf.nn.relu(-logits)) * (
-            weight_a + weight_b
-        ) + logits * weight_b
-        return loss
-
-    return focal_loss_func
-
-
 def lr_schedule(epoch):
     initial_lrate = 1e-7
     drop = 0.7
@@ -75,15 +58,6 @@ def lr_schedule(epoch):
     lr = initial_lrate * math.pow(drop, math.floor((1 + epoch) / epochs_drop))
 
     return lr
-
-
-def lr_schedule_manual(epoch):
-    if epoch > 5:
-        return 1e-6
-    elif epoch > 2:
-        return 3e-6
-    else:
-        return 5e-6
 
 
 def train_model():
