@@ -69,9 +69,9 @@ def focal_loss(alpha, gamma):
 
 
 def lr_schedule(epoch):
-    initial_lrate = 1e-5
+    initial_lrate = 1e-7
     drop = 0.7
-    epochs_drop = 8.0
+    epochs_drop = 20.0
     lr = initial_lrate * math.pow(drop, math.floor((1 + epoch) / epochs_drop))
 
     return lr
