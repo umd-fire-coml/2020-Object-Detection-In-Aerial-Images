@@ -32,9 +32,30 @@ def dice_coef(smooth):
     return dice_coef
 
 
+# https://arxiv.org/abs/1706.05721
 def tversky_loss(y_true, y_pred):
-    alpha = 0.1
-    beta = 0.9
+    alpha = [0.1] * 16
+    beta = [0.9] * 16
+    alpha[0] = 0.9
+    beta[0] = 0.1
+    weights = [
+        0.2,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+    ]
 
     ones = K.ones_like(y_true)
     p0 = y_pred  # proba that voxels are class i
@@ -45,7 +66,9 @@ def tversky_loss(y_true, y_pred):
     num = K.sum(p0 * g0, (0, 1, 2, 3))
     den = num + alpha * K.sum(p0 * g1, (0, 1, 2)) + beta * K.sum(p1 * g0, (0, 1, 2))
 
-    T = K.sum(num / den)  # when summing over classes, T has dynamic range [0 Ncl]
+    T = K.sum(
+        weights * num / den
+    )  # when summing over classes, T has dynamic range [0 Ncl]
 
     Ncl = K.cast(K.shape(y_true)[-1], "float32")
     return Ncl - T
