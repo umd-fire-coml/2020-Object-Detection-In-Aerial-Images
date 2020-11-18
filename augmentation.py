@@ -6,6 +6,7 @@ import numpy as np
 
 
 def augment(image, mask):
+
     # N.B. while the albumentations library is convenient, it lacks any way to
     # represent non-horizontal bounding boxes, so those have to be dealt with manually
     transforms = []
@@ -15,11 +16,13 @@ def augment(image, mask):
     if random.randint(0, 2) == 0:
         # Flip horizontally with 1/3 probability
         image = cv2.flip(image, 1)
+
         mask = cv2.flip(mask, 1)
 
     if random.randint(0, 2) == 0:
         # Flip vertically with 1/3 probability
         image = cv2.flip(image, 0)
+
         mask = cv2.flip(mask, 0)
 
     if random.randint(0, 1) == 0:
@@ -29,19 +32,24 @@ def augment(image, mask):
             # turn 90 clockwise
             image = np.transpose(image, (1, 0, 2))
             image = cv2.flip(image, 1)
+
             mask = np.transpose(mask, (1, 0, 2))
             mask = cv2.flip(mask, 1)
 
         elif turns == 2:
             # turn 180
             image = cv2.flip(image, -1)
+
             mask = cv2.flip(mask, -1)
+
         else:
             # turn 270
             image = np.transpose(image, (1, 0, 2))
             image = cv2.flip(image, 0)
+
             mask = np.transpose(mask, (1, 0, 2))
             mask = cv2.flip(mask, 0)
+
 
     # Cropping will be handled elsewhere; saving this just in case
     """
@@ -92,4 +100,5 @@ def augment(image, mask):
     # Apply Contrast Limited Adaptive Histogram Equalization (???) with 50% probability
 
     augment = A.Compose(transforms)
+
     return augment(image=image)["image"], mask
