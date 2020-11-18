@@ -1,30 +1,78 @@
 # %%
 import os
+import random
+import sys
 
 import cv2
-import matplotlib
 import numpy as np
 from matplotlib import pyplot as plt
 from tensorflow.keras.utils import Sequence
 
 labels_to_idx = {
-    "plane": 0,
-    "ship": 1,
-    "storage-tank": 2,
-    "baseball-diamond": 3,
-    "tennis-court": 4,
-    "basketball-court": 5,
-    "ground-track-field": 6,
-    "harbor": 7,
-    "bridge": 8,
-    "large-vehicle": 9,
-    "small-vehicle": 10,
-    "helicopter": 11,
-    "roundabout": 12,
-    "soccer-ball-field": 13,
-    "swimming-pool": 14,
-    "container-crane": 15,
+    "void": 0,
+    "plane": 1,
+    "ship": 2,
+    "storage-tank": 3,
+    "baseball-diamond": 4,
+    "tennis-court": 5,
+    "basketball-court": 6,
+    "ground-track-field": 7,
+    "harbor": 8,
+    "bridge": 9,
+    "large-vehicle": 10,
+    "small-vehicle": 11,
+    "helicopter": 12,
+    "roundabout": 13,
+    "soccer-ball-field": 14,
+    "swimming-pool": 15,
+    "container-crane": 16,
 }
+
+idx_to_rgb = [
+    (0, 0, 0),
+    (0, 127, 255),
+    (0, 0, 63),
+    (0, 63, 63),
+    (0, 63, 0),
+    (0, 63, 127),
+    (0, 63, 191),
+    (0, 63, 255),
+    (0, 100, 155),
+    (0, 127, 63),
+    (0, 127, 127),
+    (0, 0, 127),
+    (0, 0, 191),
+    (0, 191, 127),
+    (0, 127, 191),
+    (0, 0, 255),
+]
+
+rgb_to_idx = {v: k for k, v in enumerate(idx_to_rgb)}
+
+
+def rgb_to_onehot(rgb_image, colormap):
+    num_classes = len(colormap)
+    shape = rgb_image.shape[:2] + (num_classes,)
+    encoded_image = np.zeros(shape, dtype=np.float32)
+    for i, cls in enumerate(colormap):
+        encoded_image[:, :, i] = np.all(
+            rgb_image.reshape((-1, 3)) == colormap[i], axis=1
+        ).reshape(shape[:2])
+    return np.asarray(encoded_image)
+
+
+def onehot_to_rgb(onehot, colormap):
+    """Function to decode encoded mask labels
+    Inputs:
+        onehot - one hot encoded image matrix (height x width x num_classes)
+        colormap - dictionary of color to label id
+    Output: Decoded RGB image (height x width x 3)
+    """
+    single_layer = np.argmax(onehot, axis=-1)
+    output = np.zeros(onehot.shape[:2] + (3,))
+    for k in colormap.keys():
+        output[single_layer == k] = colormap[k]
+    return np.uint8(output)
 
 
 class InconsistentDatasetError(Exception):
@@ -67,6 +115,9 @@ class DOTASequence(Sequence):
                         self.annotations[img_name][:, :8] -= 1
                         break
 
+            if img_name not in self.annotations.keys():
+                self.annotations[img_name] = []
+
     def __len__(self):
         return len(self.image_names) // self.batch_size
 
@@ -93,21 +144,38 @@ class DOTASequence(Sequence):
         return np.asarray(batch_x), np.asarray(batch_y)
 
 
-class SegmentationSequence(DOTASequence):
+class SegmentationSequence(Sequence):
     def __init__(
         self,
         img_path,
-        annot_path,
+        mask_path,
         augmenter=None,
         batch_size=5,
         output_img_size=(480, 480),
         steps_per_epoch=1000,
     ):
-        super().__init__(img_path, annot_path, augmenter, batch_size)
+        self.img_path = img_path
+        self.mask_path = mask_path
+        self.augmenter = augmenter
+        self.batch_size = batch_size
         self.output_img_size = output_img_size
         self.steps_per_epoch = steps_per_epoch
-
         self.generator = self.batch_generator()
+
+        self.image_names = [
+            x[:-4] for x in os.listdir(self.img_path) if x.endswith(".png")
+        ]
+
+        masks = {
+            x[:-23]
+            for x in os.listdir(self.mask_path)
+            if x.endswith("_instance_color_RGB.png")
+        }
+        images_missing_masks = set(self.image_names) - masks
+        if len(images_missing_masks) != 0:
+            raise InconsistentDatasetError(
+                "Images missing annotations: " + ", ".join(images_missing_masks)
+            )
 
     def __len__(self):
         return self.steps_per_epoch
@@ -117,52 +185,28 @@ class SegmentationSequence(DOTASequence):
         while True:
             for img_name in self.image_names:
                 img = cv2.imread(os.path.join(self.img_path, img_name + ".png"))
-                bbox_set = self.annotations[img_name]
-
-                if self.augmenter:
-                    img, bbox_set = self.augmenter(img, bbox_set)
-
-                mask = np.zeros(
-                    (img.shape[0], img.shape[1], len(labels_to_idx)), dtype=np.uint8
+                mask = cv2.imread(
+                    os.path.join(self.mask_path, img_name + "_instance_color_RGB.png")
                 )
-                for bbox in bbox_set:
-                    try:
-                        box_class = bbox[8]
-                    except IndexError as e:
-                        print(img_name)
-                        print(bbox)
-                        raise e
+                if self.augmenter:
+                    img, mask = self.augmenter(img, mask)
 
-                    bbox = bbox[:8].reshape((4, 2))
-
-                    left = np.min(bbox, axis=0)
-                    right = np.max(bbox, axis=0)
-                    x = np.arange(left[0], right[0] + 1)
-                    y = np.arange(left[1], right[1] + 1)
-                    xv, yv = np.meshgrid(x, y, indexing="xy")
-                    points = np.hstack((xv.reshape((-1, 1)), yv.reshape((-1, 1))))
-
-                    path = matplotlib.path.Path(bbox)
-                    bbox_mask = path.contains_points(points)
-                    bbox_mask.shape = xv.shape
-                    try:
-                        mask[
-                            left[1] : right[1] + 1,
-                            left[0] : right[0] + 1,
-                            box_class,
-                        ] += bbox_mask
-                    except ValueError as e:
-                        pass
+                mask = rgb_to_onehot(mask, idx_to_rgb)
 
                 for x in range(start_pos[0], img.shape[1], self.output_img_size[0]):
                     for y in range(start_pos[1], img.shape[0], self.output_img_size[1]):
-                        yield img[
+                        img_chunk = img[
                             y : min(y + self.output_img_size[1], img.shape[0]),
                             x : min(x + self.output_img_size[0], img.shape[1]),
-                        ], mask[
+                        ]
+                        mask_chunk = mask[
                             y : min(y + self.output_img_size[1], mask.shape[0]),
                             x : min(x + self.output_img_size[0], mask.shape[1]),
                         ]
+                        if 1 in mask_chunk[:, :, 1:]:
+                            yield img_chunk, mask_chunk
+
+            random.shuffle(self.image_names)
 
     def __getitem__(self, idx):
         imgs, masks = zip(*[next(self.generator) for i in range(self.batch_size)])
@@ -173,7 +217,8 @@ class SegmentationSequence(DOTASequence):
         for i, img in enumerate(imgs):
             if img.shape != (self.output_img_size[1], self.output_img_size[0], 3):
                 img_pad = np.zeros(
-                    (self.output_img_size[1], self.output_img_size[0], 3)
+                    (self.output_img_size[1], self.output_img_size[0], 3),
+                    dtype=np.uint8,
                 )
                 img_pad[: img.shape[0], : img.shape[1]] = img
                 imgs[i] = img_pad
@@ -182,13 +227,13 @@ class SegmentationSequence(DOTASequence):
             if mask.shape != (
                 self.output_img_size[1],
                 self.output_img_size[0],
-                len(labels_to_idx),
+                len(labels_to_idx) - 1,
             ):
                 mask_pad = np.zeros(
                     (
                         self.output_img_size[1],
                         self.output_img_size[0],
-                        len(labels_to_idx),
+                        len(labels_to_idx) - 1,
                     )
                 )
                 mask_pad[: mask.shape[0], : mask.shape[1]] = mask
@@ -198,7 +243,15 @@ class SegmentationSequence(DOTASequence):
 
 
 if __name__ == "__main__":
-    sequence = SegmentationSequence(
-        ".\\data\\train\\images", ".\\data\\train\\annotations"
-    )
+    sequence = SegmentationSequence(".\\data\\train\\images", ".\\data\\train\\masks")
+    i = 0
+    while True:
+        imgs, masks = sequence[0]
+        if imgs.shape != (5, 480, 480, 3):
+            print("Sample {} img incorrect load. Shape {}".format(i, imgs.shape))
+            sys.exit()
+        if masks.shape != (5, 480, 480, 16):
+            print("Sample {} mask incorrect load. Shape {}".format(i, masks.shape))
+            sys.exit()
+
 # %%
