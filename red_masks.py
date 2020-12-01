@@ -97,17 +97,16 @@ def use_red_channel(img_dir):
 
 
 #%% test cell
-output = use_red_channel("data/train/masks/P0626_instance_color_RGB.png")
-cv2.imwrite("example.png", output)
+# output = use_red_channel('data/train/masks/P0980_instance_color_RGB.png')
+# cv2.imwrite('example.png', output)
 #%%
-# directories = ["data/train/masks/", "data/validation/masks"]
+directories = ["data/train/masks/", "data/validation/masks"]
 
 # iterating directories
-# for directory in directories:
-#    for filename in os.listdir(directory):
-#        if filename.endswith(".png"):
-#            # Doing BGR to RGB
-#            fulldir = directory + filename
-#            image = cv2.imread(directory + filename)
-#            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-#            cv2.imwrite(fulldir, image)
+for directory in directories:
+    for filename in os.listdir(directory):
+        if filename.endswith(".png"):
+            # Make use of red channel
+            fulldir = directory + filename
+            image = use_red_channel(fulldir)
+            cv2.imwrite(fulldir, image)

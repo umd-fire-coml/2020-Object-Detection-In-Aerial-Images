@@ -70,7 +70,7 @@ def onehot_to_rgb(onehot, colormap):
     """
     single_layer = np.argmax(onehot, axis=-1)
     output = np.zeros(onehot.shape[:2] + (3,))
-    for k in colormap.keys():
+    for k in range(len(colormap)):
         output[single_layer == k] = colormap[k]
     return np.uint8(output)
 
