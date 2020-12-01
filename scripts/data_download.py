@@ -4,26 +4,26 @@ import os
 from zipfile import ZipFile
 
 # %% setting up data directories
-if not(os.path.exists('data/train')):
-    os.makedirs('data/train')
+if not(os.path.exists(os.path.join('..', 'data', 'train'))):
+    os.makedirs(os.path.join('..', 'data', 'train'))
 
-if not(os.path.exists('data/train/annotations_hbb/')):
-    os.makedirs('data/train/annotations_hbb/')
+if not(os.path.exists(os.path.join('..', 'data', 'train', 'annotations_hbb'))):
+    os.makedirs(os.path.join('..', 'data', 'train', 'annotations_hbb'))
 
-if not(os.path.exists('data/train/annotations/')):
-    os.makedirs('data/train/annotations/')
+if not(os.path.exists(os.path.join('..', 'data', 'train', 'annotations'))):
+    os.makedirs(os.path.join('..', 'data', 'train', 'annotations'))
 
-if not(os.path.exists('data/test')):
-    os.makedirs('data/test')
+if not(os.path.exists(os.path.join('..', 'data', 'test'))):
+    os.makedirs(os.path.join('..', 'data', 'test'))
 
-if not(os.path.exists('data/validation')):
-    os.makedirs('data/validation')
+if not(os.path.exists(os.path.join('..', 'data', 'validation'))):
+    os.makedirs(os.path.join('..', 'data', 'validation'))
 
-if not(os.path.exists('data/validation/annotations_hbb/')):
-    os.makedirs('data/validation/annotations_hbb/')
+if not(os.path.exists(os.path.join('..', 'data', 'validation', 'annotations_hbb'))):
+    os.makedirs(os.path.join('..', 'data', 'validation', 'annotations_hbb'))
 
-if not(os.path.exists('data/validation/annotations/')):
-    os.makedirs('data/validation/annotations/')
+if not(os.path.exists(os.path.join('..', 'data', 'validation', 'annotations'))):
+    os.makedirs(os.path.join('..', 'data', 'validation', 'annotations'))
 
 
 # %% training set
@@ -34,8 +34,9 @@ urls = ['https://drive.google.com/uc?export=download&id=1zb_kEOXTtpsMuWAtuTtMIPL
 'https://drive.google.com/uc?export=download&id=1-vLCMhIW9CV2cmCPPBbDR9_hdecf5bLb',
 'https://drive.google.com/uc?export=download&id=12uPWoADKggo9HGaqGh2qOmcXXn-zKjeX']
 
-outputs = ['data/train/part1.zip', 'data/train/part2.zip', 'data/train/part3.zip', 
-'data/train/annotations_hbb/annotations.zip', 'data/train/annotations/annotations.zip']
+outputs = [os.path.join('..', 'data', 'train', 'part1.zip'), os.path.join('..', 'data', 'train', 'part2.zip'),
+            os.path.join('..', 'data', 'train', 'part3.zip'), os.path.join('..', 'data', 'train', 'annotations_hbb', 'annotations.zip'),
+            os.path.join('..', 'data', 'train', 'annotations', 'annotations.zip')]
 
 for i in range(len(urls)):
     if not(os.path.exists(outputs[i])):
@@ -52,6 +53,7 @@ outputs = ['data/validation/part1.zip', 'data/validation/annotations_hbb/annotat
 'data/validation/annotations/annotations.zip']
 
 for i in range(len(urls)):
+    outputs[i] = os.path.normpath(os.path.join('..', outputs[i]))
     if not(os.path.exists(outputs[i])):
         gdown.download(urls[i],outputs[i], quiet = False)
 
@@ -65,6 +67,7 @@ urls = ['https://drive.google.com/uc?export=download&id=1fwiTNqRRen09E-O9VSpcMV2
 outputs = ['data/test/part1.zip', 'data/test/part2.zip', 'data/test/test_info.json']
 
 for i in range(len(urls)):
+    outputs[i] = os.path.normpath(os.path.join('..', outputs[i]))
     if not(os.path.exists(outputs[i])):
         gdown.download(urls[i],outputs[i], quiet = False)
 
@@ -80,6 +83,8 @@ outputs = ['data/train/', 'data/train/', 'data/train/', 'data/train/annotations_
 'data/validation/annotations/']
 
 for i in range(len(zip_paths)):
+    zip_paths[i] = os.path.normpath(os.path.join('..', zip_paths[i]))
+    outputs[i] = os.path.normpath(os.path.join('..', outputs[i]))
     if os.path.exists(zip_paths[i]):
         with ZipFile(zip_paths[i], 'r') as zip_ref:
             zip_ref.extractall(outputs[i])
