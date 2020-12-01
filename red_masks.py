@@ -11,24 +11,24 @@ from data_generator import onehot_to_rgb, rgb_to_onehot
 colormap = [
     (0, 0, 0),  # void
     (230, 20, 230),  # plane
-    (125, 26, 65),  # ship
-    (226, 107, 15),  # storage tank
+    (65, 26, 125),  # ship
+    (15, 107, 226),  # storage tank
     (0, 63, 0),  # baseball diamond
     (0, 63, 127),  # tennis court
     (0, 63, 193),  # basketball court
     (229, 37, 37),  # ground-track-field
-    (209, 190, 22),  # harbor
+    (22, 190, 209),  # harbor
     (159, 22, 209),  # bridge
-    (138, 169, 13),  # large vehicle
+    (13, 169, 138),  # large vehicle
     (13, 174, 29),  # small vehicle
     (74, 30, 92),  # helicopter
-    (49, 96, 119),  # roundabout
-    (0, 191, 127),  # Soccer field
-    (0, 0, 255),  # Swimming pool
+    (119, 96, 46),  # roundabout
+    (127, 191, 0),  # Soccer field
+    (255, 0, 0),  # Swimming pool
     (124, 78, 0),  # Container Crane
 ]
-# new colormap copy
-colormap_cop = {
+# new colormap dictionary
+colormap_dict = {
     (0, 0, 0): 0,  # void
     (230, 20, 230): 1,  # plane
     (125, 26, 65): 2,  # ship
@@ -67,8 +67,8 @@ og_colormap = [
     (0, 0, 255),
 ]
 
-# original colormap copy
-og_colormap_cop = {
+# original colormap dictionary
+og_colormap_dict = {
     (0, 0, 0): 0,
     (0, 127, 255): 1,
     (0, 0, 63): 2,
@@ -91,15 +91,16 @@ og_colormap_cop = {
 #%% function to convert image
 def use_red_channel(img_dir):
     image = cv2.imread(img_dir)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     onehot = rgb_to_onehot(image, og_colormap)
-    return onehot_to_rgb(onehot, og_colormap_cop)
+    return onehot_to_rgb(onehot, colormap)
 
 
 #%% test cell
-output = use_red_channel("data/train/masks/P0001_instance_color_RGB.png")
+output = use_red_channel("data/train/masks/P0626_instance_color_RGB.png")
 cv2.imwrite("example.png", output)
 #%%
-# directories = ["data/train/masks/"]
+# directories = ["data/train/masks/", "data/validation/masks"]
 
 # iterating directories
 # for directory in directories:
