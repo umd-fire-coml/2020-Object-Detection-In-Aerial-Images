@@ -97,7 +97,7 @@ def use_red_channel(img_dir):
 
 #%% test cell
 output = use_red_channel("data/train/masks/P0001_instance_color_RGB.png")
-cv2.imwrite(output, "example.png")
+cv2.imwrite("example.png", output)
 #%%
 # directories = ["data/train/masks/"]
 
