@@ -243,7 +243,7 @@ class SegmentationSequence(Sequence):
 
 
 if __name__ == "__main__":
-    sequence = SegmentationSequence(os.path.normpath(".\\data\\train\\images", ".\\data\\train\\masks"))
+    sequence = SegmentationSequence(os.path.normpath("..\\data\\train\\images"), ps.path.normpath("..\\data\\train\\masks"))
     i = 0
     while True:
         imgs, masks = sequence[0]
