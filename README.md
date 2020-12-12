@@ -17,7 +17,7 @@ This repo detects rotated and cluttered objects in aerial images. The model itse
 
 ## Video Demonstration
 
-WE NEED A VIDEO? WELL WE DON'T HAVE ONE.
+A demonstration can be found [here](https://youtu.be/tSZCD2kxmtQ).
 
 ## Results
 
@@ -71,7 +71,7 @@ Model training functions, given a model created by model_builder.py. Includes tv
 
 The data can be downloaded by running [data_download.py](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/data_download.py). 
 Afterwards, run [data-checker.py](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/data-checker.py) to verify files.
-Then run [model_builder.py](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/data-checker.py)
+Then run [model_builder.py](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/data-checker.py) to begin training.
 
 ## Sources
 
