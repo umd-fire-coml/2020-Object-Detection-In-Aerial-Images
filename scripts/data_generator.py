@@ -70,7 +70,7 @@ def onehot_to_rgb(onehot, colormap):
     """
     single_layer = np.argmax(onehot, axis=-1)
     output = np.zeros(onehot.shape[:2] + (3,))
-    for k in colormap.keys():
+    for k in range(len(colormap)):
         output[single_layer == k] = colormap[k]
     return np.uint8(output)
 
@@ -243,7 +243,7 @@ class SegmentationSequence(Sequence):
 
 
 if __name__ == "__main__":
-    sequence = SegmentationSequence(".\\data\\train\\images", ".\\data\\train\\masks")
+    sequence = SegmentationSequence(os.path.normpath("..\\data\\train\\images"), os.path.normpath("..\\data\\train\\masks"))
     i = 0
     while True:
         imgs, masks = sequence[0]
