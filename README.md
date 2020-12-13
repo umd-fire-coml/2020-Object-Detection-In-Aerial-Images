@@ -13,7 +13,7 @@ If there are problems with the environment afterwards, run the [environment chec
 
 ## Product Description
 
-This repo detects rotated and cluttered objects in aerial images. The model itself is a convoultional neural network using several groups of convolutional/deconvolutional and maxpooling layers. We use rotation augmentation to further account for the various rotations objects may be found in.
+This repo detects rotated and cluttered objects in aerial images. This can then be used to detect thing like traffic on satellite maps or for disaster relief. The model itself is a convoultional neural network using several groups of convolutional/deconvolutional and maxpooling layers. We use rotation augmentation to further account for the various rotations objects may be found in.
 
 ## Video Demonstration
 
