@@ -21,7 +21,7 @@ A demonstration can be found [here](https://youtu.be/tSZCD2kxmtQ).
 
 ## Results
 
-Visualized results notebook here.
+Visualized results notebook [here](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/Visualizer.ipynb).
 
 ## Directory Guide
 
