@@ -13,7 +13,7 @@ If there are problems with the environment afterwards, run the [environment chec
 
 ## Product Description
 
-This repo detects rotated and cluttered objects in aerial images. The model itself is a convoultional neural network using several groups of convolutional/deconvolutional and maxpooling layers. We use rotation augmentation to further account for the various rotations objects may be found in.
+This repo detects rotated and cluttered objects in aerial images. This can then be used to detect thing like traffic on satellite maps or for disaster relief. The model itself is a convoultional neural network using several groups of convolutional/deconvolutional and maxpooling layers. We use rotation augmentation to further account for the various rotations objects may be found in.
 
 ## Video Demonstration
 
@@ -21,7 +21,7 @@ A demonstration can be found [here](https://youtu.be/tSZCD2kxmtQ).
 
 ## Results
 
-Visualized results notebook here.
+Visualized results notebook [here](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/Visualizer.ipynb).
 
 ## Directory Guide
 
@@ -73,6 +73,8 @@ The data can be downloaded by running [data_download.py](https://github.com/umd-
 Afterwards, run [data-checker.py](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/data-checker.py) to verify files.
 Then run [model_builder.py](https://github.com/umd-fire-coml/2020-Object-Detection-In-Aerial-Images/blob/master/data-checker.py) to begin training.
 
+Alternatively go to the [Google Colab Notebook](https://colab.research.google.com/drive/1BeKgI61b-GMTHxmwhIIyjMlWM5is6IDE?usp=sharing) and train from there. [4]
+
 ## Sources
 
 [1] Ekin Tiu. 2019. Metrics to Evaluate Your Semantic Segmentation Model. (August 2019). Retrieved November 14, 2020 from https://towardsdatascience.com/metrics-to-evaluate-your-semantic-segmentation-model-6bcb99639aa2
@@ -80,3 +82,5 @@ Then run [model_builder.py](https://github.com/umd-fire-coml/2020-Object-Detecti
 [2] Xia, Gui-Song and Bai, Xiang and Ding, Jian and Zhu, Zhen and Belongie, Serge and Luo, Jiebo and Datcu, Mihai and Pelillo, Marcello and Zhang, Liangpei. 2018. DOTA: A Large-Scale Dataset for Object Detection in Aerial Images. The IEEE Conference on Computer Vision and Pattern Recognition (CVPR).
 
 [3] Seyed Sadegh Mohseni Salehi, Deniz Erdogmus, Ali Gholipour. 2017. Tversky loss function for image segmentation using 3D fully convolutional deep networks. arXiv:1706.05721. Retrieved from https://arxiv.org/abs/1706.05721.
+
+[4] Tran Minh Quan, David G. C. Hildebrand and Won-Ki Jeong. 2016. FusionNet: A deep fully residual convolutional neural network for image segmentation in connectomics. arXiv:1612.05360. Retrieved from https://arxiv.org/abs/1612.05360. 
