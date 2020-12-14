@@ -2,6 +2,7 @@ import datetime
 import math
 
 import numpy as np
+import os
 import tensorflow as tf
 import tensorflow.keras.backend as K
 from tensorflow.keras.callbacks import (
@@ -17,7 +18,7 @@ import model_builder
 from accuracy import iou_coef
 
 EPOCHS = 200
-MODEL_SAVE_PATH = ".\\saved_models\\fusionNet"
+MODEL_SAVE_PATH = os.path.normpath(".\\saved_models\\fusionNet")
 
 
 def dice_coef(smooth):
@@ -85,8 +86,8 @@ def lr_schedule(epoch):
 
 def train_model():
     generator = data_generator.SegmentationSequence(
-        ".\\data\\train\\images",
-        ".\\data\\train\\masks",
+        os.path.normpath("..\\data\\train\\images"),
+        os.path.normpath("..\\data\\train\\masks"),
         augmenter=augmentation.augment,
         batch_size=4,
         output_img_size=(240, 240),
@@ -101,7 +102,7 @@ def train_model():
     )
 
     tb = TensorBoard(
-        log_dir=".\\logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"),
+        log_dir=os.path.normpath(".\\logs\\fit\\") + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"),
         histogram_freq=1,
     )
     # lr_reducer = ReduceLROnPlateau(
@@ -109,7 +110,7 @@ def train_model():
     # )
     lr_scheduler = LearningRateScheduler(lr_schedule)
     checkpoints = ModelCheckpoint(
-        ".\\ckpts",
+        os.path.normpath(".\\ckpts"),
         monitor="loss",
         verbose=0,
         save_weights_only=False,

@@ -6,9 +6,10 @@
 # %%
 import sys
 import re
+import os
 # %%
 #getting dependencies from environment.yml
-env_yml = open('environment.yml', 'r')
+env_yml = open(os.path.join('..', 'environment.yml'), 'r')
 dependencies = {}
 
 #skipping to dependencies
